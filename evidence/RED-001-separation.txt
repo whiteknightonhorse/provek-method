@@ -1,0 +1,20 @@
+=== RED RUN: the separation gate must fail on a planted violation ===
+2026-08-20T07:34:40Z
+
+planted: documents/_planted_violation.md, a file that indexes this corpus to the
+verification instrument - the exact thing the separation forbids.
+
+separation: FAILED, 3 occurrence(s)
+
+  documents/_planted_violation.md:4  a ladder level
+      way the separation forbids: it explains how to raise an L4 to an L5 so that a passport sho
+  documents/_planted_violation.md:4  the passport artefact
+      way the separation forbids: it explains how to raise an L4 to an L5 so that a passport sho
+  documents/_planted_violation.md:5  a score
+      higher score.
+rc=1
+
+=== GREEN RUN, planted file removed ===
+2026-08-20T07:34:40Z
+separation: clean - this corpus does not mention the verification instrument
+rc=0

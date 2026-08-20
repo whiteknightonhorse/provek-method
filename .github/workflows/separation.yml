@@ -1,0 +1,37 @@
+name: separation
+
+# The boundary between teaching and verification, held by a machine rather than by intent.
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  separation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+
+      - name: this corpus may not mention the verification instrument
+        run: python3 check_separation.py
+
+      - name: and the gate must still be able to fail
+        # A check never seen to fail is not evidence that anything is caught.
+        #
+        # The planted text is ASSEMBLED FROM FRAGMENTS rather than written out, because a workflow
+        # containing the forbidden vocabulary literally would itself trip the gate - and the fix
+        # for that would be to exempt this directory, which is how a rule gets widened until it
+        # stops catching anything. The same trick was used for the secret-scan fixtures in the
+        # verification repository, for the same reason.
+        run: |
+          L="L" ; P="pass" ; S="sc"
+          printf '# planted\n\nRaising an %s4 to an %s5 so a %sport shows a higher %sore.\n' \
+            "$L" "$L" "$P" "$S" > documents/_ci_planted.md
+          if python3 check_separation.py; then
+            echo "the gate did not fire on a planted violation" >&2
+            rm -f documents/_ci_planted.md
+            exit 1
+          fi
+          rm -f documents/_ci_planted.md
+          echo "control passed: the gate fires on a planted violation"
